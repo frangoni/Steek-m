@@ -1,11 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0
+
 pragma solidity >=0.7.0 <0.9.0;
 
-contract Figu1 {
+contract Figurita {
     mapping(address => uint256) public amount;
     uint256 _quantity;
+    bytes32 name;
 
-    constructor() {}
+    constructor(bytes32 _name) {
+        name = _name;
+    }
 
     error InsufficientBalance(uint256 requested, uint256 available);
 
@@ -35,4 +39,32 @@ contract Figu1 {
     function getOwnBalance() public view returns (uint256) {
         return amount[msg.sender];
     }
+
+    function getName() public view returns (string memory) {
+        return bytes32ToString(name);
+    }
+
+    function bytes32ToString(bytes32 _bytes32)
+        public
+        pure
+        returns (string memory)
+    {
+        uint8 i = 0;
+        while (i < 32 && _bytes32[i] != 0) {
+            i++;
+        }
+        bytes memory bytesArray = new bytes(i);
+        for (i = 0; i < 32 && _bytes32[i] != 0; i++) {
+            bytesArray[i] = _bytes32[i];
+        }
+        return string(bytesArray);
+    }
+}
+
+contract Figu1 is Figurita {
+    constructor() Figurita("steekit1") {}
+}
+
+contract Figu2 is Figurita {
+    constructor() Figurita("steekit2") {}
 }
